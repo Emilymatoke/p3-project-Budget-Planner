@@ -1,5 +1,3 @@
-# p3-project-Budget-Planner
-
 Budget Planner Application
 
 The Budget Planner Application is a command-line interface (CLI) tool designed to help users manage their expenses and budget more effectively. It allows users to create categories for their expenses, add individual expenses to these categories, view all categories and expenses, and search for expenses by name.
@@ -15,7 +13,7 @@ git clone https://github.com/Emilymatoke/p3-project-Budget-Planner
 
 bash
 
-cd p3-project-Budget-Planner
+cd budget-planner
 
     Install dependencies using pipenv:
 
