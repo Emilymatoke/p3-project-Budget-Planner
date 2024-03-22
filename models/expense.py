@@ -1,39 +1,29 @@
 import sqlite3
 
-DATABASE_FILE = "budgetplanner.db"
-
 class Expense:
+    conn = sqlite3.connect('budgetplanner.db')
+    cursor = conn.cursor()
+
     @classmethod
     def create(cls, name, amount, category_id):
-        conn = sqlite3.connect(DATABASE_FILE)
-        cursor = conn.cursor()
-        cursor.execute("INSERT INTO expenses (name, amount, category_id) VALUES (?, ?, ?)", (name, amount, category_id))
-        conn.commit()
-        conn.close()
+        cls.cursor.execute("INSERT INTO expenses (name, amount, category_id) VALUES (?, ?, ?)", (name, amount, category_id))
+        cls.conn.commit()
         print("Expense added successfully.")
 
     @classmethod
     def delete(cls, expense_id):
-        conn = sqlite3.connect(DATABASE_FILE)
-        cursor = conn.cursor()
-        cursor.execute("DELETE FROM expenses WHERE id = ?", (expense_id,))
-        conn.commit()
-        conn.close()
+        cls.cursor.execute("DELETE FROM expenses WHERE id = ?", (expense_id,))
+        cls.conn.commit()
+        print("Expense deleted successfully.")
 
     @classmethod
     def get_all(cls):
-        conn = sqlite3.connect(DATABASE_FILE)
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM expenses")
-        expenses = cursor.fetchall()
-        conn.close()
+        cls.cursor.execute("SELECT * FROM expenses")
+        expenses = cls.cursor.fetchall()
         return expenses
 
     @classmethod
     def find_by_id(cls, expense_id):
-        conn = sqlite3.connect(DATABASE_FILE)
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM expenses WHERE id = ?", (expense_id,))
-        expense = cursor.fetchone()
-        conn.close()
+        cls.cursor.execute("SELECT * FROM expenses WHERE id = ?", (expense_id,))
+        expense = cls.cursor.fetchone()
         return expense

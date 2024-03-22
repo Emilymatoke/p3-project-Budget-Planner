@@ -1,39 +1,29 @@
 import sqlite3
 
-DATABASE_FILE = "budgetplanner.db"
-
 class Category:
+    conn = sqlite3.connect('budgetplanner.db')
+    cursor = conn.cursor()
+
     @classmethod
     def create(cls, name):
-        conn = sqlite3.connect(DATABASE_FILE)
-        cursor = conn.cursor()
-        cursor.execute("INSERT INTO categories (name) VALUES (?)", (name,))
-        conn.commit()
-        conn.close()
+        cls.cursor.execute("INSERT INTO categories (name) VALUES (?)", (name,))
+        cls.conn.commit()
         print("Category added successfully.")
 
     @classmethod
     def delete(cls, category_id):
-        conn = sqlite3.connect(DATABASE_FILE)
-        cursor = conn.cursor()
-        cursor.execute("DELETE FROM categories WHERE id = ?", (category_id,))
-        conn.commit()
-        conn.close()
+        cls.cursor.execute("DELETE FROM categories WHERE id = ?", (category_id,))
+        cls.conn.commit()
+        print("Category deleted successfully.")
 
     @classmethod
     def get_all(cls):
-        conn = sqlite3.connect(DATABASE_FILE)
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM categories")
-        categories = cursor.fetchall()
-        conn.close()
+        cls.cursor.execute("SELECT * FROM categories")
+        categories = cls.cursor.fetchall()
         return categories
 
     @classmethod
     def find_by_id(cls, category_id):
-        conn = sqlite3.connect(DATABASE_FILE)
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM categories WHERE id = ?", (category_id,))
-        category = cursor.fetchone()
-        conn.close()
+        cls.cursor.execute("SELECT * FROM categories WHERE id = ?", (category_id,))
+        category = cls.cursor.fetchone()
         return category
