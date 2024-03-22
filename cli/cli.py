@@ -2,8 +2,7 @@ import sys
 
 class BudgetCLI:
     def __init__(self):
-        self.categories = []
-        self.expenses = []
+        self.categories = {}
 
     def display_menu(self):
         print("Budget Planner Application")
@@ -41,54 +40,72 @@ class BudgetCLI:
                 print("Invalid choice, please try again.")
 
     def add_category(self):
-        name = input("Enter category name: ")
-        Category.create(name)
-        print("Category added successfully.")
+        category_name = input("Enter category name: ")
+        if category_name in self.categories:
+            print("Category already exists.")
+        else:
+            self.categories[category_name] = []
+            print(f"Category '{category_name}' added successfully.")
 
     def add_expense(self):
-        name = input("Enter expense name: ")
-        amount = int(input("Enter expense amount: "))
-        category_id = int(input("Enter category ID: "))
-        Expense.create(name, amount, category_id)
-        print("Expense added successfully.")
+        category_name = input("Enter category name: ")
+        if category_name not in self.categories:
+            print("Error: Category not found.")
+            return
+        expense_name = input("Enter expense name: ")
+        expense_amount = float(input("Enter expense amount: "))
+        self.categories[category_name].append((expense_name, expense_amount))
+        print(f"Expense '{expense_name}' added to category '{category_name}'.")
 
     def delete_category(self):
-        category_id = int(input("Enter category ID to delete: "))
-        Category.delete(category_id)
-        print("Category deleted successfully.")
+        category_name = input("Enter category name to delete: ")
+        if category_name in self.categories:
+            del self.categories[category_name]
+            print(f"Category '{category_name}' deleted successfully.")
+        else:
+            print("Error: Category not found.")
 
     def delete_expense(self):
-        expense_id = int(input("Enter expense ID to delete: "))
-        Expense.delete(expense_id)
-        print("Expense deleted successfully.")
+        category_name = input("Enter category name: ")
+        if category_name not in self.categories:
+            print("Error: Category not found.")
+            return
+        expense_name = input("Enter expense name to delete: ")
+        expenses = self.categories[category_name]
+        for i, (name, _) in enumerate(expenses):
+            if name == expense_name:
+                del expenses[i]
+                print(f"Expense '{expense_name}' deleted from category '{category_name}'.")
+                return
+        print(f"Error: Expense '{expense_name}' not found in category '{category_name}'.")
 
     def view_all_categories(self):
         print("Categories:")
-        categories = Category.get_all()
-        for category in categories:
-            print(f"ID: {category[0]}, Name: {category[1]}")
+        for category in self.categories:
+            print("-", category)
 
     def view_all_expenses(self):
         print("Expenses:")
-        expenses = Expense.get_all()
-        for expense in expenses:
-            print(f"ID: {expense[0]}, Name: {expense[1]}, Amount: {expense[2]}, Category ID: {expense[3]}")
+        for category, expenses in self.categories.items():
+            print(f"Category: {category}")
+            for expense_name, expense_amount in expenses:
+                print(f"- {expense_name}: {expense_amount}")
 
     def find_expense_by_name(self):
-        name = input("Enter expense name to search: ")
-        expenses = Expense.find_by_name(name)
-        if expenses:
-            print("Expenses Found:")
-            for expense in expenses:
-                print(f"ID: {expense[0]}, Name: {expense[1]}, Amount: {expense[2]}, Category ID: {expense[3]}")
-        else:
-            print("No expenses found with the given name.")
+        search_name = input("Enter expense name to search: ")
+        found = False
+        for category, expenses in self.categories.items():
+            for expense_name, expense_amount in expenses:
+                if expense_name == search_name:
+                    found = True
+                    print(f"Category: {category}, Expense: {expense_name}, Amount: {expense_amount}")
+        if not found:
+            print(f"No expense found with name '{search_name}'.")
 
 if __name__ == "__main__":
     budget_cli = BudgetCLI()
     budget_cli.run()
 
 
-from models.category import Category
-from models.expense import Expense
-1
+
+
