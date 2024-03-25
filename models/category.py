@@ -27,3 +27,9 @@ class Category:
         cls.cursor.execute("SELECT * FROM categories WHERE id = ?", (category_id,))
         category = cls.cursor.fetchone()
         return category
+
+
+# Create categories
+Category.create('Food')
+Category.create('Transportation')
+Category.create('Entertainment')

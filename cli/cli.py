@@ -1,8 +1,22 @@
 import sys
 
+
 class BudgetCLI:
     def __init__(self):
         self.categories = {}
+
+    # Define your CLI functionality here
+    def display_categories():
+        categories = Category.get_all()
+        print("Categories:")
+        for category in categories:
+            print(category)
+
+    def display_expenses():
+        expenses = Expense.get_all()
+        print("Expenses:")
+        for expense in expenses:
+            print(expense)
 
     def display_menu(self):
         print("Budget Planner Application")
@@ -107,5 +121,6 @@ if __name__ == "__main__":
     budget_cli.run()
 
 
-
+from models.category import Category
+from models.expense import Expense
 
